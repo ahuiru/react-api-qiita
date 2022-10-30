@@ -1,6 +1,17 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
+import { Buttons } from "./components/Buttons";
+import { Cards } from "./components/Cards";
+import { Input } from "./components/Input";
+
+const API_KEY = process.env.REACT_APP_QIITA_API_TOKEN;
+const key = {
+  headers: {
+    // 'Accept': 'application/json',
+    Authorization: `Bearer ${API_KEY}`,
+  },
+};
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -13,16 +24,22 @@ function App() {
   const getQiitaPosts = () => {
     setLoading(true);
     axios
-      .get("https://qiita.com/api/v2/items", {
-        params: {
-          page: nowPageNum,
-          // page: 1,
-          per_page: "20",
-          query: query,
+      .get(
+        "https://qiita.com/api/v2/items",
+        {
+          params: {
+            page: nowPageNum,
+            // page: 1,
+            per_page: "20",
+            // token: API_KEY,
+            query: query,
+          },
+          // withCredentials: true,
         },
-      })
+        key
+      )
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         const fetchData = async () => {
           let qiitaPostData = await Promise.all(
             res.data.map((article) => {
@@ -37,55 +54,32 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+    console.log(nowPageNum);
   };
   // console.log(qiitaData);
+  // console.log(API_KEY)
 
-  const handlePrevButton = () => {
-    setNowPageNum((prev) => prev - 1);
-
-    setPrevPageNum(nowPageNum - 1);
-    setNextPageNum(nowPageNum + 1);
+  useEffect(() => {
     getQiitaPosts();
-    if (prevPageNum === 0) {
-      return;
-    }
-  };
-
-  const handleNextButton = () => {
-    setNowPageNum((prev) => prev + 1);
-
-    setPrevPageNum(nowPageNum - 1);
-    setNextPageNum(nowPageNum + 1);
-    getQiitaPosts();
-  };
-
-  // console.log(nowPageNum, "now");
-  // console.log(prevPageNum, "prev");
-  // console.log(nextPageNum, "next");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nowPageNum, prevPageNum, nextPageNum]);
 
   return (
     <div className="App">
       <h1>Hello! Qiita API</h1>
-      <input
-        type="text"
-        placeholder="ワード"
-        onChange={(e) => setQuery(e.target.value)}
-      />
-      <input type="button" onClick={getQiitaPosts} value="セット" />
+      <Input setQuery={setQuery} getQiitaPosts={getQiitaPosts} />
       {loading ? (
         <p>ロード中・・・</p>
       ) : (
         <>
-          {qiitaData.map((qiita, i) => (
-            <div key={i}>
-              <a href={qiita.url}>タイトル：{qiita.title}</a>
-            </div>
-          ))}
-          <div>
-            <button onClick={handlePrevButton}>{prevPageNum}</button>
-            <p>{nowPageNum}</p>
-            <button onClick={handleNextButton}>{nextPageNum}</button>
-          </div>
+          <Cards qiitaData={qiitaData} />
+          <Buttons
+            setNowPageNum={setNowPageNum}
+            setPrevPageNum={setPrevPageNum}
+            setNextPageNum={setNextPageNum}
+            prevPageNum={prevPageNum}
+            getQiitaPosts={getQiitaPosts}
+          />
         </>
       )}
     </div>
