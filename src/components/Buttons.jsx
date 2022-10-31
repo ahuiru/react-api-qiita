@@ -1,11 +1,16 @@
 import React from "react";
 
+import { useEffect } from "react";
+
 export const Buttons = ({
+  query,
   prevPageNum,
   setNowPageNum,
   setPrevPageNum,
   setNextPageNum,
 }) => {
+
+
   const handlePrevButton = () => {
     const prev = (prev) => prev - 1;
     setNowPageNum(prev);
@@ -19,6 +24,7 @@ export const Buttons = ({
     setPrevPageNum(prev);
     setNextPageNum(prev);
   };
+
   return (
     <div>
       {prevPageNum !== 0 ? (

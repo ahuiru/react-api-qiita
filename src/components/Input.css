@@ -1,0 +1,30 @@
+.inputArea {
+  justify-content: space-between;
+}
+
+.inputArea .input {
+  font-size: 1rem;
+  padding: 3px 5px;
+  height: 25px;
+  width: 400px;
+  border: 1px solid#c5c5c5;
+  border-radius: 3px;
+
+}
+
+.inputArea .button {
+  color: white;
+  border: none;
+  height: 29px;
+  box-shadow: 0px 4px 0px 0px #0032a8;
+  border-radius: 4px;
+  margin-left: 5px;
+  padding: 6px 8px;
+  background-color: rgb(71, 107, 225);
+  transition: all 0.3s;
+}
+
+.inputArea .button:hover {
+  box-shadow:none;
+  transform: translateY(5px);
+}

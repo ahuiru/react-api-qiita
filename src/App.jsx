@@ -4,6 +4,7 @@ import "./App.css";
 import { Buttons } from "./components/Buttons";
 import { Cards } from "./components/Cards";
 import { Input } from "./components/Input";
+import { useRef } from "react";
 
 const API_KEY = process.env.REACT_APP_QIITA_API_TOKEN;
 const key = {
@@ -20,6 +21,7 @@ function App() {
   const [nextPageNum, setNextPageNum] = useState(2);
   const [prevPageNum, setPrevPageNum] = useState(0);
   const [qiitaData, setQiitaData] = useState([]);
+  const ref = useRef(true);
 
   const getQiitaPosts = () => {
     setLoading(true);
@@ -31,7 +33,7 @@ function App() {
             page: nowPageNum,
             // page: 1,
             per_page: "20",
-            // token: API_KEY,
+            token: API_KEY,
             query: query,
           },
           // withCredentials: true,
@@ -39,7 +41,7 @@ function App() {
         key
       )
       .then((res) => {
-        // console.log(res);
+        console.log(res);
         const fetchData = async () => {
           let qiitaPostData = await Promise.all(
             res.data.map((article) => {
@@ -49,12 +51,13 @@ function App() {
           setQiitaData(qiitaPostData);
         };
         fetchData();
+        // setQuery()
         setLoading(false);
       })
       .catch((err) => {
         console.log(err);
       });
-    console.log(nowPageNum);
+    // console.log(nowPageNum);
   };
   // console.log(qiitaData);
   // console.log(API_KEY)
@@ -74,6 +77,7 @@ function App() {
         <>
           <Cards qiitaData={qiitaData} />
           <Buttons
+            query={query}
             setNowPageNum={setNowPageNum}
             setPrevPageNum={setPrevPageNum}
             setNextPageNum={setNextPageNum}

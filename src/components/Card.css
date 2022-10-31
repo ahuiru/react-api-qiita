@@ -1,0 +1,12 @@
+.card {
+  width: 700px;
+  padding: 8px 12px;
+  margin: 10px auto;
+  background-color: white;
+  border-radius: 8px;
+}
+
+.user-info img{
+  height: 50px;
+  width: 50px;
+}
